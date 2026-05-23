@@ -182,19 +182,19 @@ static int do_bundle(int argc, char *argv[])
         long sz = get_file_size(files[i]);
         if (sz < 0) {
             /* Dosya acilamiyor ya da bulunamiyor */
-            fprintf(stderr, "%s giris dosyasinin formati uyumsuzdur!\n", files[i]);
+            fprintf(stderr, "%s giriş dosyasının formatı uyumsuzdur!\n", files[i]);
             return 1;
         }
 
         int text = is_text_file(files[i]);
         if (text == -1) {
             /* Dosya acilamiyor */
-            fprintf(stderr, "%s giris dosyasinin formati uyumsuzdur!\n", files[i]);
+            fprintf(stderr, "%s giriş dosyasının formatı uyumsuzdur!\n", files[i]);
             return 1;
         }
         if (text == 0) {
             /* Binary veya uyumsuz format */
-            fprintf(stderr, "%s giris dosyasinin formati uyumsuzdur!\n", files[i]);
+            fprintf(stderr, "%s giriş dosyasının formatı uyumsuzdur!\n", files[i]);
             return 1;
         }
 
@@ -203,7 +203,7 @@ static int do_bundle(int argc, char *argv[])
 
     if (total_size > MAX_TOTAL_SIZE) {
         fprintf(stderr,
-                "Hata: Giris dosyalarinin toplam boyutu 200 MB'i asiyor!\n");
+                "Hata: Giriş dosyalarının toplam boyutu 200 MB'ı aşıyor!\n");
         return 1;
     }
 
@@ -270,7 +270,7 @@ static int do_bundle(int argc, char *argv[])
     }
 
     fclose(out);
-    printf("Arsiv dosyasi '%s' basariyla olusturuldu.\n", output);
+    printf("Arşiv dosyası '%s' başarıyla oluşturuldu.\n", output);
     return 0;
 }
 
@@ -303,21 +303,21 @@ static int do_extract(int argc, char *argv[])
     /* .sau uzanti kontrolu */
     size_t alen = strlen(archive);
     if (alen < 5 || strcmp(archive + alen - 4, ".sau") != 0) {
-        fprintf(stderr, "Arsiv dosyasi uygunsuz veya bozuk!\n");
+        fprintf(stderr, "Arşiv dosyası uygunsuz veya bozuk!\n");
         return 1;
     }
 
     /* Arsiv dosyasini ac */
     FILE *fp = fopen(archive, "rb");
     if (!fp) {
-        fprintf(stderr, "Arsiv dosyasi uygunsuz veya bozuk!\n");
+        fprintf(stderr, "Arşiv dosyası uygunsuz veya bozuk!\n");
         return 1;
     }
 
     /* --- 10 baytlik basligi oku --- */
     char header[ORG_HEADER_LEN + 1];
     if (fread(header, 1, ORG_HEADER_LEN, fp) != (size_t)ORG_HEADER_LEN) {
-        fprintf(stderr, "Arsiv dosyasi uygunsuz veya bozuk!\n");
+        fprintf(stderr, "Arşiv dosyası uygunsuz veya bozuk!\n");
         fclose(fp);
         return 1;
     }
@@ -326,7 +326,7 @@ static int do_extract(int argc, char *argv[])
     /* Baslikta sadece rakam olmali */
     for (int i = 0; i < ORG_HEADER_LEN; i++) {
         if (header[i] < '0' || header[i] > '9') {
-            fprintf(stderr, "Arsiv dosyasi uygunsuz veya bozuk!\n");
+            fprintf(stderr, "Arşiv dosyası uygunsuz veya bozuk!\n");
             fclose(fp);
             return 1;
         }
@@ -334,7 +334,7 @@ static int do_extract(int argc, char *argv[])
 
     long org_size = atol(header);
     if (org_size <= 0) {
-        fprintf(stderr, "Arsiv dosyasi uygunsuz veya bozuk!\n");
+        fprintf(stderr, "Arşiv dosyası uygunsuz veya bozuk!\n");
         fclose(fp);
         return 1;
     }
@@ -348,7 +348,7 @@ static int do_extract(int argc, char *argv[])
     }
 
     if ((long)fread(org, 1, (size_t)org_size, fp) != org_size) {
-        fprintf(stderr, "Arsiv dosyasi uygunsuz veya bozuk!\n");
+        fprintf(stderr, "Arşiv dosyası uygunsuz veya bozuk!\n");
         free(org);
         fclose(fp);
         return 1;
@@ -387,7 +387,7 @@ static int do_extract(int argc, char *argv[])
         size_t rec_len = (size_t)(end - token);
         char   record[NAME_MAX + 40];
         if (rec_len >= sizeof(record)) {
-            fprintf(stderr, "Arsiv dosyasi uygunsuz veya bozuk!\n");
+            fprintf(stderr, "Arşiv dosyası uygunsuz veya bozuk!\n");
             free(org);
             fclose(fp);
             return 1;
@@ -415,7 +415,7 @@ static int do_extract(int argc, char *argv[])
     }
 
     if (entry_count == 0) {
-        fprintf(stderr, "Arsiv dosyasi uygunsuz veya bozuk!\n");
+        fprintf(stderr, "Arşiv dosyası uygunsuz veya bozuk!\n");
         free(org);
         fclose(fp);
         return 1;
@@ -498,7 +498,7 @@ static int do_extract(int argc, char *argv[])
     fclose(fp);
 
     /* Basari mesaji */
-    printf("Arsiv '%s' basariyla acildi", archive);
+    printf("Arşiv '%s' başarıyla açıldı", archive);
     if (strcmp(dir, ".") != 0)
         printf(" -> %s", dir);
     printf("\n");
